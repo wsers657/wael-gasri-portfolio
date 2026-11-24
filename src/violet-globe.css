@@ -1,0 +1,2 @@
+/* Le renderer WebGL violet remplace le globe précédemment monté. */
+.orb>.earth-canvas{display:none!important}.violet-globe-canvas{position:absolute;inset:0;width:100%!important;height:100%!important;z-index:5;pointer-events:none}.orb:before,.orb:after{display:none!important}

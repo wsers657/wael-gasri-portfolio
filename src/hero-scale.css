@@ -1,0 +1,2 @@
+/* Ajustement d'échelle : conserve la scène, avec plus d'espace autour du titre. */
+.orb{width:clamp(590px,66vw,980px)!important;top:18%!important}@media(max-width:760px){.orb{width:118vw!important;top:25%!important}}

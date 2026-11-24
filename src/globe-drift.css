@@ -1,0 +1,2 @@
+/* Globe fixe dans son orientation, avec mouvement organique discret. */
+.orb:before{animation:globe-drift 8s ease-in-out infinite!important}@keyframes globe-drift{0%,100%{transform:translate3d(0,0,0) scale(1);filter:saturate(.9) brightness(.9) drop-shadow(0 0 14px rgba(171,103,255,.65))}45%{transform:translate3d(0,-17px,0) scale(1.018);filter:saturate(1.08) brightness(1.04) drop-shadow(0 0 23px rgba(194,132,255,.82))}72%{transform:translate3d(8px,-8px,0) scale(1.008)}}@media(prefers-reduced-motion:reduce){.orb:before{animation:none!important}}

@@ -1,0 +1,10 @@
+/* Repères concrets qui complètent la présentation du profil. */
+.profile-overview{max-width:1200px;margin:0 auto;padding:0 6vw 82px}
+.profile-overview>.kicker{margin-bottom:18px!important}
+.profile-overview>div{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.profile-overview article{min-height:165px;padding:22px;border:1px solid rgba(170,192,255,.2);border-radius:18px;background:linear-gradient(145deg,rgba(23,29,54,.76),rgba(7,9,19,.68));box-shadow:inset 0 1px rgba(224,235,255,.05);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.profile-overview article:hover{transform:translateY(-4px);border-color:rgba(181,211,255,.55);box-shadow:0 12px 36px rgba(36,52,126,.22)}
+.profile-overview article>span{display:block;margin-bottom:24px;color:#aab8e4;font-size:9px;font-weight:600;letter-spacing:.16em}
+.profile-overview strong{display:block;color:#eef2ff;font:italic clamp(1.45rem,2vw,2rem)/1.02 'Instrument Serif',serif}
+.profile-overview p{margin:14px 0 0;color:#aeb8cf;font-size:12px;line-height:1.55}
+@media(max-width:760px){.profile-overview{padding-bottom:58px}.profile-overview>div{grid-template-columns:1fr}.profile-overview article{min-height:0;padding:19px}.profile-overview article>span{margin-bottom:15px}}

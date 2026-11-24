@@ -1,0 +1,9 @@
+/* Les mots-clés du parcours deviennent de petites balises orbitales au survol. */
+.timeline li{position:relative;isolation:isolate;overflow:hidden;cursor:default;transition:transform .28s ease,border-color .28s ease,background .28s ease,color .28s ease,box-shadow .28s ease}
+.timeline li:before{content:"";position:absolute;inset:-38% -18%;z-index:-1;background:conic-gradient(from 0deg,transparent 0 44%,rgba(123,215,255,.08) 48%,rgba(207,151,255,.52) 50%,rgba(123,215,255,.08) 52%,transparent 56% 100%);opacity:0;transition:opacity .25s ease}
+.timeline li:after{content:"";position:absolute;top:50%;left:11px;width:4px;height:4px;border-radius:50%;background:#dcfaff;opacity:0;box-shadow:0 0 7px 3px rgba(140,224,255,.95),0 0 16px 7px rgba(140,113,255,.55);transform:translateY(-50%) scale(.4);transition:opacity .25s ease,transform .25s ease}
+.timeline li:hover{transform:translateY(-3px) scale(1.035);border-color:rgba(169,213,255,.78);background:radial-gradient(circle at 22% 50%,rgba(120,196,255,.24),rgba(112,83,240,.13) 42%,rgba(12,15,34,.7) 100%);color:#f4f7ff;box-shadow:0 0 15px rgba(124,194,255,.28),inset 0 0 16px rgba(145,112,255,.14)}
+.timeline li:hover:before{opacity:1;animation:tag-orbit 1.8s linear infinite}
+.timeline li:hover:after{opacity:1;transform:translateY(-50%) scale(1)}
+@keyframes tag-orbit{to{transform:rotate(1turn)}}
+@media(prefers-reduced-motion:reduce){.timeline li,.timeline li:hover{transition:none;transform:none}.timeline li:hover:before{animation:none}}

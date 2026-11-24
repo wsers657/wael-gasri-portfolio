@@ -1,0 +1,2 @@
+/* Texture spatiale haute définition : ciel profond, poussières et étoiles naturelles. */
+.hero-new:before{background-image:linear-gradient(to bottom,rgba(3,4,10,.36) 0%,rgba(3,5,12,.2) 34%,rgba(3,5,12,.56) 84%,#04050a 100%),url('/media/starfield-deep-space.png')!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;filter:saturate(.86) contrast(1.08) brightness(.72)}.hero-new .grid-bg{opacity:.12!important}.grid-bg:before,.grid-bg:after{opacity:.55!important}

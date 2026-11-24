@@ -1,0 +1,3 @@
+/* Sélection de texte cohérente avec la palette spatiale du portfolio. */
+::selection{color:#f5fdff;background:#526dcc;text-shadow:0 0 12px rgba(213,249,255,.65)}
+::-moz-selection{color:#f5fdff;background:#526dcc;text-shadow:0 0 12px rgba(213,249,255,.65)}

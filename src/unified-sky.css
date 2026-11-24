@@ -1,0 +1,2 @@
+/* Même ciel continu au-dessus et au-dessous de la planète. */
+.hero-new:before{background-attachment:fixed!important}.home-portal{background:linear-gradient(to bottom,rgba(2,3,10,.3),rgba(2,3,10,.18) 36%,rgba(2,3,10,.62) 88%,#04050a 100%),url('/media/starfield-clean.png') center/cover fixed!important}.home-portal:after{display:none!important}.home-portal:before{display:none!important}@media(max-width:760px){.hero-new:before,.home-portal{background-attachment:scroll!important}}

@@ -1,0 +1,4 @@
+/* Chaque route commence par une page complète ; le contenu supplémentaire reste naturellement scrollable. */
+.page{min-height:100svh!important;overflow:visible!important}
+.page:not(:has(.hero-new)) .page-title{padding-top:22px!important}
+@media(max-width:760px){.page{min-height:100svh!important}}

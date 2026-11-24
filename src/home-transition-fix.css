@@ -1,0 +1,2 @@
+/* Continuité du ciel entre le héros et les cartes de navigation. */
+.hero-new:after{height:18%!important;background:linear-gradient(to bottom,transparent 0%,rgba(2,3,10,.22) 72%,rgba(2,3,10,.5) 100%)!important}.home-portal{background:transparent!important;backdrop-filter:none!important}.home-portal:before{display:none!important}

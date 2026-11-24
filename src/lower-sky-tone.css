@@ -1,0 +1,2 @@
+/* Variante plus calme et plus profonde du ciel pour la section basse. */
+.home-portal{background:linear-gradient(rgba(1,5,13,.72),rgba(1,5,13,.82)),url('/media/starfield-clean.png') center/cover fixed!important}.home-portal:after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 50% 20%,rgba(22,36,76,.12),transparent 52%)}.home-portal>.kicker,.home-portal>.portal-grid{z-index:1!important}@media(max-width:760px){.home-portal{background-attachment:scroll!important}}

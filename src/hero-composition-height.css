@@ -1,0 +1,12 @@
+/* Globe réduit et centré : les marges haute et basse restent symétriques. */
+.hero-new{height:calc(100svh + 90px)!important;min-height:850px!important}
+.hero-new .orb{width:clamp(405px,48vw,720px)!important;top:50%!important;animation:planet-breathe-centered 9s ease-in-out infinite!important}
+.hero-new .hero-content{transform:translateY(clamp(-54px,-4vh,-26px))!important}
+.hero-new .hero-content h1{letter-spacing:-.055em!important;line-height:.83!important;text-shadow:0 8px 30px rgba(2,3,15,.46)}
+.hero-new .kicker{color:#f2f5ff!important;font-weight:600!important;text-shadow:0 2px 12px rgba(2,3,12,.96),0 0 20px rgba(131,146,255,.55)!important;-webkit-text-stroke:.15px rgba(245,248,255,.42)}
+.hero-new .hero-text{margin-bottom:8px!important}
+/* Le bloc d'actions reste au centre de sa zone basse : même respiration avant et après les boutons. */
+.hero-new .actions{display:flex!important;visibility:visible!important;margin-top:96px!important;gap:16px!important}
+.hero-new .actions .button{min-width:clamp(180px,15vw,230px);padding:11px 24px!important;text-align:center}
+@keyframes planet-breathe-centered{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.025)}}
+@media(max-width:760px){.hero-new{height:calc(100svh + 74px)!important;min-height:790px!important}.hero-new .orb{width:83vw!important;top:50%!important}.hero-new .hero-content{transform:translateY(-3vh)!important}.hero-new .actions{margin-top:54px!important;gap:10px!important}.hero-new .actions .button{min-width:0;padding:13px 17px!important}}

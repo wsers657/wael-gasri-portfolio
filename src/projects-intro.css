@@ -1,0 +1,5 @@
+/* Introduction des projets : une accroche claire, puis un complément facile à parcourir. */
+.page-title .title-copy{display:grid;gap:12px;max-width:590px!important}
+.page-title .title-copy span{display:block}
+.page-title .title-copy-lead{color:#edf2ff;font-size:1.08em;font-weight:500;line-height:1.55}
+.page-title .title-copy strong{color:#d9e2ff;font-weight:600}

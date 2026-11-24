@@ -1,0 +1,2 @@
+/* Globe WebGL réellement en 3D : textures Terre, nuages et atmosphère. */
+.orb:before,.orb:after{display:none!important}.earth-canvas{position:absolute;inset:0;width:100%!important;height:100%!important;z-index:1;pointer-events:none}.orb i{z-index:3!important}.orb b{z-index:4!important}.orb{filter:drop-shadow(0 0 22px rgba(101,91,255,.52)) drop-shadow(0 0 80px rgba(72,98,255,.25))!important}

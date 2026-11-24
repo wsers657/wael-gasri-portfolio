@@ -1,0 +1,98 @@
+/* Couche finale : rythme commun, sans débordement, de l'écran large au mobile étroit. */
+:root{--site-gutter:clamp(20px,5vw,76px)}
+html,body,#root{min-width:0;min-height:100%}
+body{overflow-x:hidden}
+img,svg,canvas{max-width:100%}
+.page,.page>*{min-width:0}
+a:focus-visible{outline:2px solid #ccefff;outline-offset:4px;border-radius:8px}
+
+/* Navigation : largeur constante et libellés toujours lisibles. */
+.nav{width:min(540px,calc(100vw - 32px))!important}
+.nav nav a{min-width:0!important;white-space:nowrap}
+
+/* Titres et contenus : une même grille horizontale sur toutes les pages internes. */
+.page-title,.project-grid,.profile-layout,.profile-overview,.ambition,.timeline{padding-left:var(--site-gutter)!important;padding-right:var(--site-gutter)!important}
+.page-title{padding-bottom:clamp(42px,5vw,68px)!important}
+.page-title>p:last-child{max-width:62ch!important}
+.title-signals{max-width:100%}
+.project-grid{gap:clamp(14px,2vw,22px)!important;padding-bottom:clamp(72px,9vw,132px)!important}
+.project-card,.project-card.p1,.project-card.p2,.project-card.p3{min-width:0}
+.project-info{left:clamp(18px,2vw,25px)!important;right:clamp(18px,2vw,25px)!important}
+.project-info h2{font-size:clamp(2.25rem,4vw,2.75rem)!important}
+.profile-layout{gap:clamp(36px,7vw,120px)!important;padding-bottom:clamp(76px,9vw,135px)!important}
+.ambition{padding-top:clamp(68px,8vw,100px)!important;padding-bottom:clamp(86px,10vw,140px)!important}
+.timeline{padding-bottom:clamp(80px,10vw,140px)!important}
+
+/* L'accueil garde ses proportions, sans que les CTA puissent toucher les bords. */
+.hero-new .hero-content{width:min(100%,800px);padding-left:var(--site-gutter)!important;padding-right:var(--site-gutter)!important}
+.hero-new .actions{max-width:100%;padding-inline:0!important}
+.hero-new .actions .button{white-space:nowrap}
+
+/* Le premier écran doit présenter la scène entière, y compris les deux CTA. */
+@media(min-width:721px){
+  .hero-new{height:100svh!important;min-height:760px!important}
+  .hero-new .orb{width:clamp(390px,44vw,640px)!important}
+  .hero-new .hero-content{padding-top:120px!important;padding-bottom:86px!important;transform:translateY(clamp(-74px,-5vh,-34px))!important}
+  .hero-new .hero-content h1{font-size:clamp(5rem,10vw,8.8rem)!important}
+  .hero-new .role-line{margin:24px 0 10px!important}
+  .hero-new .hero-text{max-width:560px!important}
+  .hero-new .actions{margin-top:58px!important}
+}
+
+@media(max-width:980px){
+  .page-title{padding-top:28px!important}
+  .project-grid{grid-template-columns:1fr!important}
+  .project-card,.project-card.p1,.project-card.p2,.project-card.p3{grid-column:auto!important;min-height:clamp(330px,58vw,430px)!important}
+  .profile-overview>div{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .profile-overview article:last-child{grid-column:1/-1!important}
+  .profile-layout{grid-template-columns:minmax(0,.72fr) minmax(0,1fr)!important;gap:clamp(28px,5vw,58px)!important}
+  .timeline{max-width:100%!important}
+  .timeline article{grid-template-columns:110px 34px minmax(0,1fr)!important}
+}
+
+@media(max-width:720px){
+  .nav{top:10px!important;width:calc(100vw - 20px)!important;height:46px!important}
+  .nav nav a{height:38px!important;font-size:clamp(9px,2.7vw,11px)!important}
+  .page-title{padding-top:24px!important}
+  .page-title h1{font-size:clamp(3.7rem,16vw,5.8rem)!important;line-height:.82!important}
+  .page-title>p:last-child{font-size:14px!important;line-height:1.7!important}
+  .title-signals{gap:7px!important}
+  .title-signals span{max-width:100%;font-size:8px!important;letter-spacing:.04em!important}
+  .hero-new{height:auto!important;min-height:max(820px,100svh)!important}
+  .hero-new .orb{width:min(92vw,540px)!important;top:48%!important}
+  .hero-new .hero-content{padding-top:104px!important;padding-bottom:96px!important;transform:translateY(-2vh)!important}
+  .hero-new .role-line{height:auto!important;margin:23px 0 12px!important}
+  .hero-new .role-line strong{font-size:clamp(1.28rem,6vw,1.55rem)!important}
+  .hero-new .hero-text{font-size:13px!important;line-height:1.65!important}
+  .hero-new .actions{margin-top:34px!important;gap:10px!important}
+  .profile-overview{padding-bottom:58px!important}
+  .profile-overview>div,.profile-layout{grid-template-columns:1fr!important}
+  .profile-overview article:last-child{grid-column:auto!important}
+  .portrait{width:min(100%,320px);justify-self:center}
+  .profile-copy h2,.ambition h2{margin-bottom:30px!important}
+  .timeline article{grid-template-columns:1fr 32px!important;padding:25px 0!important}
+  .timeline article>div{grid-column:1/-1!important}
+  .timeline h2{font-size:clamp(2rem,10vw,2.5rem)!important}
+  footer{min-height:96px!important;padding:20px var(--site-gutter)!important;gap:14px!important;align-items:flex-start!important}
+  footer>span:nth-child(2){display:none}
+}
+
+@media(max-width:440px){
+  :root{--site-gutter:18px}
+  .nav{width:calc(100vw - 16px)!important;height:43px!important}
+  .nav nav a{height:35px!important;font-size:9px!important}
+  .hero-new{min-height:max(850px,100svh)!important}
+  .hero-new .hero-content h1{font-size:clamp(4.7rem,22vw,6rem)!important}
+  .hero-new .actions{width:min(100%,310px);margin-left:auto;margin-right:auto;flex-direction:column!important}
+  .hero-new .actions .button{width:100%;min-width:0!important;padding:13px 16px!important}
+  .hero-status{left:var(--site-gutter)!important;right:var(--site-gutter)!important;bottom:20px!important;line-height:1.45}
+  .project-card,.project-card.p1,.project-card.p2,.project-card.p3{min-height:350px!important}
+  .project-info h2{font-size:2.15rem!important}
+  .profile-overview article{padding:18px!important}
+  .skill-list>div{grid-template-columns:32px minmax(0,1fr)!important;gap:6px!important}
+  .skill-list em{grid-column:2!important}
+  .skill-list i{left:32px!important}
+  footer{justify-content:center!important;text-align:center}
+}
+
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
