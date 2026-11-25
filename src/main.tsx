@@ -41,9 +41,8 @@ function Explore(){const ref=useRef<HTMLElement>(null);useEffect(()=>{const ctx=
 function Footer(){return <><section className="stats wrap"><div><b>20<span>+</span></b><p>Years Experience</p></div><div><b>95<span>+</span></b><p>Projects Done</p></div><div><b>200<span>%</span></b><p>Satisfied Clients</p></div></section><footer id="contact"><Video className="footer-video"/><div className="footer-shade"/><div className="marquee">{'BUILDING THE FUTURE • '.repeat(7)}</div><div className="footer-cta"><p>Have an idea in mind?</p><a href="mailto:hello@michaelsmith.com">Let’s make it real ↗</a></div><div className="footer-bottom"><span>© 2026 Michael Smith</span><div><a>Twitter</a><a>LinkedIn</a><a>Dribbble</a><a>GitHub</a></div><span className="available"><i/> Available for projects</span></div></footer></>}
 function App(){const [loading,setLoading]=useState(true);return <><AnimatePresence>{loading&&<Loading done={()=>setLoading(false)}/>}</AnimatePresence><main className={loading?'hidden-main':''}><Hero/><Work/><Journal/><Explore/><Footer/></main></>};createRoot(document.getElementById('root')!).render(<App/>)
 */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { AnimatePresence, motion } from 'framer-motion'
 import { HashRouter, Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import { profile, projects, skills, journey, ambitions } from './content/portfolio'
 import './styles.css'
@@ -78,7 +77,7 @@ import './remove-quick-nav.css'
 import './violet-satellite.css'
 import './satellite-depth.css'
 import './satellite-direction.css'
-import './satellite-trail'
+import { attachSatelliteTrail } from './satellite-trail'
 import './hero-composition-height.css'
 import './timeline-tags.css'
 import './profile-highlights.css'
@@ -88,19 +87,365 @@ import './projects-intro.css'
 import './home-globe-restore.css'
 import './profile-details.css'
 import './responsive-final.css'
+import './performance.css'
 
-const rise = { initial: { opacity: 0, y: 18 }, animate: { opacity: 1, y: 0 }, transition: { duration: .6 } }
-function Loader(){const[n,setN]=useState(0);useEffect(()=>{let x=0;const i=setInterval(()=>{x+=4;setN(x);if(x>=100)clearInterval(i)},35);return()=>clearInterval(i)},[]);return <motion.div className="loader" exit={{opacity:0}}><p>PORTFOLIO / 2026</p><strong>{String(n).padStart(3,'0')}</strong><i><b style={{transform:`scaleX(${n/100})`}}/></i></motion.div>}
-function Nav(){return <header className="nav"><Link className="mark" to="/">{profile.initials}</Link><nav><NavLink to="/">Accueil</NavLink><NavLink to="/projets">Projets</NavLink><NavLink to="/profil">Profil</NavLink><NavLink to="/parcours">Parcours</NavLink></nav><Link className="contact-pill" to="/contact">Me contacter <span>↗</span></Link></header>}
-function Orb(){return <div className="orb"><img className="hero-globe-image" src="/media/digital-earth-network.png" alt=""/><i/><i/><i/><i/><i/><b/></div>}
-function Button({to,children,dark=false}:{to:string,children:React.ReactNode,dark?:boolean}){return <Link className={'button '+(dark?'button-dark':'')} to={to}>{children} <span>↗</span></Link>}
-function Layout({children}:{children:React.ReactNode}){const loc=useLocation();useEffect(()=>{window.scrollTo({top:0,left:0,behavior:'instant'})},[loc.pathname]);return <><Nav/><AnimatePresence mode="wait"><motion.main key={loc.pathname} className="page" {...rise}>{children}</motion.main></AnimatePresence><footer><span>© {new Date().getFullYear()} {profile.name}</span><span>Construire des interfaces qui laissent une trace.</span><a href={`mailto:${profile.email}`}>{profile.email}</a></footer></>}
-function Home(){const[r,setR]=useState(0);useEffect(()=>{const t=setInterval(()=>setR(v=>(v+1)%profile.roles.length),2200);return()=>clearInterval(t)},[]);return <><section className="hero-new"><div className="grid-bg"/><Orb/><div className="hero-content"><p className="kicker">PORTFOLIO — {profile.location}</p><h1>{profile.firstName}<br/><em>{profile.lastName}</em></h1><p className="role-line">{profile.introPrefix} <AnimatePresence mode="wait"><motion.strong key={r} initial={{opacity:0,y:9}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-9}}>{profile.roles[r]}</motion.strong></AnimatePresence></p><p className="hero-text">{profile.shortBio}</p><div className="actions"><Button to="/projets">Découvrir mes projets</Button><Button to="/profil" dark>Mon profil</Button></div></div><div className="hero-status"><i/> Disponible pour de nouvelles collaborations</div><p className="scroll-note">SCROLL TO EXPLORE <span>↓</span></p></section><section className="home-portal"><p className="kicker">NAVIGATION RAPIDE</p><div className="portal-grid"><Link to="/projets"><span>01</span><strong>Projets</strong><small>Études de cas & créations</small><b>↗</b></Link><Link to="/profil"><span>02</span><strong>Profil</strong><small>Compétences & vision</small><b>↗</b></Link><Link to="/parcours"><span>03</span><strong>Parcours</strong><small>Expériences & apprentissages</small><b>↗</b></Link></div></section></>}
-function Title({eyebrow,title,copy,signals=[]}:{eyebrow:string,title:React.ReactNode,copy?:React.ReactNode,signals?:string[]}){return <section className="page-title"><p className="kicker">{eyebrow}</p><h1>{title}</h1>{signals.length>0&&<div className="title-signals">{signals.map((signal,index)=><span key={signal}><b>{String(index+1).padStart(2,'0')}</b>{signal}</span>)}</div>}{copy&&<p className="title-copy">{copy}</p>}</section>}
-function Projects(){return <><Title eyebrow="SÉLECTION / 01" title={<>Projets <em>choisis.</em></>} signals={['04 systèmes en construction', 'Agents IA · Data · automatisation', 'Projets personnels & académiques']} copy={<><span className="title-copy-lead">Une sélection de projets où une idée, une vidéo ou des données deviennent un outil exploitable.</span><span>Chaque projet part d’un besoin concret : <strong>mieux organiser l’information</strong>, automatiser une tâche répétitive, rendre des contenus plus accessibles ou aider à la prise de décision.</span><span>De la réflexion initiale à la mise en œuvre, je conçois des expériences claires et utiles en combinant design, développement, intelligence artificielle et analyse de données. Ces projets sont aussi des terrains d’apprentissage : je teste, j’itère et j’améliore chaque système au fil des retours.</span></>}/><section className="project-grid">{projects.map((p,i)=><article className={'project-card p'+i} key={p.title}><img src={p.image} alt=""/><div className="project-glow"/><div className="project-info"><p>{p.year} — {p.category}</p><h2>{p.title}</h2><span>{p.description}</span><a href={p.url||'#'}>Voir l’étude <b>↗</b></a></div></article>)}</section></>}
-function Profile(){return <><Title eyebrow="PROFIL / 02" title={<>Construire,<br/><em>apprendre, livrer.</em></>} signals={['Business, Data & AI', 'Paris · Albert School × Mines Paris – PSL', 'Stage recherché dès juin 2027']} copy={profile.longBio}/><section className="profile-overview" aria-label="Repères du profil"><p className="kicker">EN BREF</p><div><article><span>FORMATION</span><strong>Bachelor Business, Data & AI</strong><p>Albert School × Mines Paris – PSL · Paris<br/>2026 — 2029</p></article><article><span>RECHERCHE</span><strong>Stage de 6 semaines minimum</strong><p>Disponible à partir de début juin 2027, avec un intérêt pour le conseil, l’IA, la finance et les startups.</p></article><article><span>ENGAGEMENTS</span><strong>Trésorier du Bureau des sports</strong><p>Albert School × Mines Paris – PSL · Membre d’Albert Junior Consulting.</p></article></div></section><section className="profile-layout"><div className="portrait"><div/><span>{profile.initials}</span></div><div className="profile-copy"><p className="kicker">MON APPROCHE</p><div className="profile-highlights">{profile.highlights.map((item,index)=><span key={item}><b>{String(index+1).padStart(2,'0')}</b>{item}</span>)}</div><h2>{profile.philosophy}</h2><div className="skill-list">{skills.map((s,i)=><div key={s.name}><span>0{i+1}</span><strong>{s.name}</strong><em>{s.level}</em><i><b style={{width:`${s.score}%`}}/></i></div>)}</div></div></section><section className="ambition"><p className="kicker">EN LIGNE DE MIRE</p><h2>{ambitions.heading}</h2><p>{ambitions.description}</p><div>{ambitions.items.map(x=><span key={x}>{x}</span>)}</div></section></>}
-function Journey(){return <><Title eyebrow="PARCOURS / 03" title={<>Créer, apprendre,<br/><em>évoluer.</em></>} signals={['Bachelor · 2026 — 2029', 'Projets techniques & associatifs', 'Paris · Alpes-Maritimes']} copy="Les expériences, formations et engagements qui façonnent ma manière de réfléchir, de collaborer et de produire."/><section className="timeline">{journey.map((x,i)=><article key={x.title}><span>{x.period}</span><i>{String(i+1).padStart(2,'0')}</i><div><p>{x.type}</p><h2>{x.title}</h2><strong>{x.organization}</strong><p>{x.description}</p><ul>{x.tags.map(t=><li key={t}>{t}</li>)}</ul></div></article>)}</section></>}
-function Contact(){return <section className="contact-page"><Orb/><p className="kicker">UNE IDÉE ? UN DÉFI ?</p><h1>Créons quelque chose<br/><em>d’inoubliable.</em></h1><p>Je suis toujours curieux d’échanger autour d’une idée, d’un produit ou d’une future collaboration.</p><a className="email-link" href={`mailto:${profile.email}`}>{profile.email} <span>↗</span></a><div className="socials">{Object.entries(profile.socials).map(([n,u])=><a key={n} href={u} target="_blank">{n} ↗</a>)}</div></section>}
-function Cursor(){useEffect(()=>{const dot=document.querySelector<HTMLElement>('.cursor i'),ring=document.querySelector<HTMLElement>('.cursor span');let x=0,y=0,rx=0,ry=0,frame=0;const move=(e:MouseEvent)=>{x=e.clientX;y=e.clientY;dot?.classList.add('is-visible');ring?.classList.add('is-visible')};const hover=(e:MouseEvent)=>ring?.classList.toggle('is-link',!!(e.target as HTMLElement).closest('a,button'));const loop=()=>{rx+=(x-rx)*.15;ry+=(y-ry)*.15;if(dot)dot.style.transform=`translate3d(${x}px,${y}px,0)`;if(ring)ring.style.transform=`translate3d(${rx}px,${ry}px,0)`;frame=requestAnimationFrame(loop)};addEventListener('mousemove',move);addEventListener('mouseover',hover);frame=requestAnimationFrame(loop);return()=>{removeEventListener('mousemove',move);removeEventListener('mouseover',hover);cancelAnimationFrame(frame)}},[]);return <div className="cursor" aria-hidden="true"><span/><i/></div>}
-function App(){const[load,setLoad]=useState(true);useEffect(()=>{const t=setTimeout(()=>setLoad(false),1000);return()=>clearTimeout(t)},[]);return <><Cursor/><HashRouter><AnimatePresence>{load&&<Loader/>}</AnimatePresence>{!load&&<Layout><Routes><Route path="/" element={<Home/>}/><Route path="/projets" element={<Projects/>}/><Route path="/profil" element={<Profile/>}/><Route path="/parcours" element={<Journey/>}/><Route path="/contact" element={<Contact/>}/></Routes></Layout>}</HashRouter></>}
+function Nav() {
+  return (
+    <header className="nav">
+      <Link className="mark" to="/" aria-label="Home">{profile.initials}</Link>
+      <nav aria-label="Main navigation">
+        <NavLink to="/" end>Home</NavLink>
+        <NavLink to="/projets">Projects</NavLink>
+        <NavLink to="/profil">Profile</NavLink>
+        <NavLink to="/parcours">Experience</NavLink>
+      </nav>
+      <Link className="contact-pill" to="/contact">Contact me <span>↗</span></Link>
+    </header>
+  )
+}
+
+function Orb({ home = false }: { home?: boolean }) {
+  const orb = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (orb.current) return attachSatelliteTrail(orb.current)
+  }, [])
+
+  return (
+    <div className="orb" ref={orb} aria-hidden="true">
+      {home ? (
+        <img
+          className="hero-globe-image"
+          src="/media/digital-earth-network.webp"
+          srcSet="/media/digital-earth-network-small.webp 640w, /media/digital-earth-network.webp 1263w"
+          sizes="(max-width: 720px) 92vw, (max-width: 1454px) 44vw, 640px"
+          fetchPriority="high"
+          decoding="async"
+          alt=""
+        />
+      ) : <span />}
+      <i/><i/><i/><i/><i/><b className="satellite"/>
+    </div>
+  )
+}
+
+function Button({ to, children, dark = false }: { to: string; children: React.ReactNode; dark?: boolean }) {
+  return <Link className={dark ? 'button button-dark' : 'button'} to={to}>{children} <span>↗</span></Link>
+}
+
+function Layout({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation()
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [pathname])
+
+  return (
+    <>
+      <Nav />
+      <span key={`stars-${pathname}`} className="route-stars" aria-hidden="true" />
+      <main key={pathname} className="page">{children}</main>
+      <footer>
+        <span>© {new Date().getFullYear()} {profile.name}</span>
+        <span>Building interfaces that leave a lasting impression.</span>
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      </footer>
+    </>
+  )
+}
+
+function Home() {
+  const [role, setRole] = useState(0)
+  useEffect(() => {
+    const motionPreference = matchMedia('(prefers-reduced-motion: reduce)')
+    let timer: number | undefined
+    const updateTimer = () => {
+      window.clearInterval(timer)
+      if (!motionPreference.matches && !document.hidden) {
+        timer = window.setInterval(() => setRole(index => (index + 1) % profile.roles.length), 2200)
+      }
+    }
+    updateTimer()
+    motionPreference.addEventListener('change', updateTimer)
+    document.addEventListener('visibilitychange', updateTimer)
+    return () => {
+      window.clearInterval(timer)
+      motionPreference.removeEventListener('change', updateTimer)
+      document.removeEventListener('visibilitychange', updateTimer)
+    }
+  }, [])
+
+  return (
+    <section className="hero-new">
+      <div className="grid-bg" />
+      <Orb home />
+      <div className="hero-content">
+        <p className="kicker">PORTFOLIO — {profile.location}</p>
+        <h1>{profile.firstName}<br /><em>{profile.lastName}</em></h1>
+        <p className="role-line">{profile.introPrefix} <strong key={role}>{profile.roles[role]}</strong></p>
+        <p className="hero-text">{profile.shortBio}</p>
+        <div className="actions">
+          <Button to="/projets">Explore my projects</Button>
+          <Button to="/profil" dark>View my profile</Button>
+        </div>
+      </div>
+      <div className="hero-status"><i /> Open to new collaborations</div>
+      <p className="scroll-note">SCROLL TO EXPLORE <span>↓</span></p>
+    </section>
+  )
+}
+
+function Title({ eyebrow, title, copy, signals = [] }: {
+  eyebrow: string; title: React.ReactNode; copy?: React.ReactNode; signals?: string[]
+}) {
+  return (
+    <section className="page-title">
+      <p className="kicker">{eyebrow}</p>
+      <h1>{title}</h1>
+      {signals.length > 0 && (
+        <div className="title-signals">
+          {signals.map((signal, index) => <span key={signal}><b>{String(index + 1).padStart(2, '0')}</b>{signal}</span>)}
+        </div>
+      )}
+      {copy && <p className="title-copy">{copy}</p>}
+    </section>
+  )
+}
+
+function Projects() {
+  return (
+    <>
+      <Title
+        eyebrow="SELECTION / 01"
+        title={<>Selected <em>projects.</em></>}
+        signals={['4 projects', 'AI agents · Data · Automation', 'Personal & academic work']}
+        copy={<>
+          <span className="title-copy-lead">A selection of projects that turn ideas, videos and data into practical tools.</span>
+          <span>Each project starts with a concrete need: <strong>organising information</strong>, automating a repetitive task, making content easier to access or supporting a decision.</span>
+          <span>I combine design, development, AI and data analysis to build and refine each tool. These projects are also a way to learn. I test what I build and use feedback to improve it.</span>
+        </>}
+      />
+      <section className="project-grid" aria-label="Projects">
+        {projects.map((project, index) => (
+          <article className={`project-card p${index}`} key={project.title}>
+            <img src={project.image} loading="lazy" decoding="async" alt="" />
+            <div className="project-glow" />
+            <div className="project-info">
+              <p>{project.year} — {project.category}</p>
+              <h2>{project.title}</h2>
+              <span>{project.description}</span>
+              {project.url && <a href={project.url}>View case study <b>↗</b></a>}
+            </div>
+          </article>
+        ))}
+      </section>
+    </>
+  )
+}
+
+function Profile() {
+  return (
+    <>
+      <Title
+        eyebrow="PROFILE / 02"
+        title={<>Build, learn,<br /><em>deliver.</em></>}
+        signals={['Business, Data & AI', 'Paris · Albert School × Mines Paris – PSL', 'Internship from June 2027']}
+        copy={profile.longBio}
+      />
+      <section className="profile-overview" aria-label="Profile at a glance">
+        <p className="kicker">AT A GLANCE</p>
+        <div>
+          <article><span>EDUCATION</span><strong>Bachelor’s in Business, Data & AI</strong><p>Albert School × Mines Paris – PSL · Paris<br />2026–2029</p></article>
+          <article><span>INTERNSHIP</span><strong>At least six weeks</strong><p>Available from early June 2027, with interests in consulting, AI, finance and startups.</p></article>
+          <article><span>STUDENT INVOLVEMENT</span><strong>Sports Association Treasurer</strong><p>Albert School × Mines Paris – PSL · Member of Albert Junior Consulting.</p></article>
+        </div>
+      </section>
+      <section className="profile-layout">
+        <div className="portrait"><div /><span>{profile.initials}</span></div>
+        <div className="profile-copy">
+          <p className="kicker">MY APPROACH</p>
+          <div className="profile-highlights">
+            {profile.highlights.map((item, index) => <span key={item}><b>{String(index + 1).padStart(2, '0')}</b>{item}</span>)}
+          </div>
+          <h2>{profile.philosophy}</h2>
+          <div className="skill-list">
+            {skills.map((skill, index) => (
+              <div key={skill.name}><span>0{index + 1}</span><strong>{skill.name}</strong><em>{skill.level}</em><i><b style={{ width: `${skill.score}%` }} /></i></div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="ambition">
+        <p className="kicker">WHAT’S NEXT</p>
+        <h2>{ambitions.heading}</h2>
+        <p>{ambitions.description}</p>
+        <div>{ambitions.items.map(item => <span key={item}>{item}</span>)}</div>
+      </section>
+    </>
+  )
+}
+
+function Journey() {
+  return (
+    <>
+      <Title
+        eyebrow="EXPERIENCE / 03"
+        title={<>Create, learn,<br /><em>grow.</em></>}
+        signals={['Bachelor’s · 2026–2029', 'Technical & student projects', 'Paris · Alpes-Maritimes']}
+        copy="The projects, coursework and student activities that shape how I work and collaborate."
+      />
+      <section className="timeline" aria-label="Experience timeline">
+        {journey.map((item, index) => (
+          <article key={item.title}>
+            <span>{item.period}</span><i>{String(index + 1).padStart(2, '0')}</i>
+            <div>
+              <p>{item.type}</p>
+              <h2>{item.title}</h2>
+              <strong>{item.organization}</strong>
+              <p>{item.description}</p>
+              <ul>{item.tags.map(tag => <li key={tag}>{tag}</li>)}</ul>
+            </div>
+          </article>
+        ))}
+      </section>
+    </>
+  )
+}
+
+function Contact() {
+  return (
+    <section className="contact-page">
+      <Orb />
+      <p className="kicker">HAVE AN IDEA OR A CHALLENGE?</p>
+      <h1>Let’s build something<br /><em>memorable.</em></h1>
+      <p>I’m always happy to talk about an idea, a product or a potential collaboration.</p>
+      <a className="email-link" href={`mailto:${profile.email}`}>{profile.email} <span>↗</span></a>
+      <div className="socials">
+        {Object.entries(profile.socials).map(([name, url]) => <a key={name} href={url} target="_blank" rel="noreferrer">{name} ↗</a>)}
+      </div>
+    </section>
+  )
+}
+
+function Cursor() {
+  const cursor = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const dot = cursor.current?.querySelector('i')
+    const ring = cursor.current?.querySelector('span')
+    if (!dot || !ring) return
+
+    const pointer = matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)')
+    let frame = 0
+    let visible = false
+    let x = 0
+    let y = 0
+    let ringX = 0
+    let ringY = 0
+
+    const draw = () => {
+      const settled = Math.abs(x - ringX) < 0.3 && Math.abs(y - ringY) < 0.3
+      ringX = settled ? x : ringX + (x - ringX) * 0.15
+      ringY = settled ? y : ringY + (y - ringY) * 0.15
+      dot.style.transform = `translate3d(${x}px,${y}px,0)`
+      ring.style.transform = `translate3d(${ringX}px,${ringY}px,0)`
+      frame = settled ? 0 : requestAnimationFrame(draw)
+    }
+
+    const move = (event: PointerEvent) => {
+      if (!pointer.matches || event.pointerType === 'touch') return
+      x = event.clientX
+      y = event.clientY
+      if (!visible) {
+        ringX = x
+        ringY = y
+        visible = true
+        dot.classList.add('is-visible')
+        ring.classList.add('is-visible')
+      }
+      if (!frame) frame = requestAnimationFrame(draw)
+    }
+
+    const hover = (event: PointerEvent) => {
+      ring.classList.toggle('is-link', event.target instanceof Element && !!event.target.closest('a, button'))
+    }
+
+    const hide = () => {
+      cancelAnimationFrame(frame)
+      frame = 0
+      visible = false
+      dot.classList.remove('is-visible')
+      ring.classList.remove('is-visible', 'is-link')
+    }
+
+    window.addEventListener('pointermove', move, { passive: true })
+    window.addEventListener('pointerover', hover, { passive: true })
+    document.documentElement.addEventListener('pointerleave', hide)
+    window.addEventListener('blur', hide)
+    pointer.addEventListener('change', hide)
+    return () => {
+      hide()
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerover', hover)
+      document.documentElement.removeEventListener('pointerleave', hide)
+      window.removeEventListener('blur', hide)
+      pointer.removeEventListener('change', hide)
+    }
+  }, [])
+
+  return <div className="cursor" ref={cursor} aria-hidden="true"><span /><i /></div>
+}
+
+function App() {
+  useEffect(() => {
+    const loader = document.getElementById('startup-loader')
+    if (!loader) return
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      loader.remove()
+      return
+    }
+
+    const started = performance.now()
+    const globe = document.querySelector<HTMLImageElement>('.hero-globe-image')
+    let reveal: number | undefined
+    let remove: number | undefined
+    let stopped = false
+
+    const finish = () => {
+      if (stopped || reveal !== undefined) return
+      reveal = window.setTimeout(() => {
+        loader.classList.add('is-ready')
+        remove = window.setTimeout(() => loader.remove(), 210)
+      }, Math.max(0, 340 - (performance.now() - started)))
+    }
+
+    // The application mounts immediately underneath the intro.
+    const deadline = window.setTimeout(finish, 720)
+    if (globe) void globe.decode().then(finish, finish)
+    else finish()
+
+    return () => {
+      stopped = true
+      window.clearTimeout(deadline)
+      window.clearTimeout(reveal)
+      window.clearTimeout(remove)
+    }
+  }, [])
+
+  return (
+    <>
+      <Cursor />
+      <HashRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/projets" element={<Projects />} />
+            <Route path="/profil" element={<Profile />} />
+            <Route path="/parcours" element={<Journey />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </Layout>
+      </HashRouter>
+    </>
+  )
+}
+
 createRoot(document.getElementById('root')!).render(<App/>)

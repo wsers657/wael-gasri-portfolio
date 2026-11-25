@@ -4,9 +4,65 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0a0a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" />
+    <style>
+      @property --startup-progress {
+        syntax: "<integer>";
+        inherits: false;
+        initial-value: 0;
+      }
+      @counter-style startup-digits {
+        system: extends decimal;
+        pad: 3 "0";
+      }
+      .portfolio-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 12px;
+        pointer-events: none;
+        background: #04050e;
+        color: #eaf0ff;
+        font: 12px system-ui, sans-serif;
+        letter-spacing: .23em;
+        animation: startup-exit 180ms ease-out 1.4s forwards;
+      }
+      .portfolio-loader strong {
+        font-size: clamp(36px, 9vw, 64px);
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+        counter-reset: startup var(--startup-progress);
+        animation: startup-count 700ms ease-out forwards;
+      }
+      .portfolio-loader strong::after { content: counter(startup, startup-digits); }
+      .portfolio-loader i {
+        width: 132px;
+        height: 1px;
+        background: linear-gradient(90deg, #bdefff, #b6a1ff);
+        transform-origin: left center;
+        animation: startup-bar 700ms ease-out forwards;
+      }
+      .portfolio-loader.is-ready { animation: startup-exit 180ms ease-out forwards; }
+      .portfolio-loader.is-ready strong { --startup-progress: 100; animation: none; }
+      .portfolio-loader.is-ready i { animation: none; }
+      @keyframes startup-count { to { --startup-progress: 92; } }
+      @keyframes startup-bar { from { transform: scaleX(.08); } to { transform: scaleX(.92); } }
+      @keyframes startup-exit { to { opacity: 0; visibility: hidden; } }
+      @media (prefers-reduced-motion: reduce) { .portfolio-loader { display: none; } }
+    </style>
     <title>Wael Gasri — Portfolio</title>
   </head>
   <body>
+    <div id="startup-loader" class="portfolio-loader" aria-hidden="true">
+      <span>PORTFOLIO / 2026</span>
+      <strong></strong>
+      <i></i>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
