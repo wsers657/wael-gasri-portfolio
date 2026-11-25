@@ -102,7 +102,7 @@ function usePortfolio() {
 }
 
 function Nav() {
-  const { language, selectLanguage, copy, profile } = usePortfolio()
+  const { copy, profile } = usePortfolio()
   return (
     <header className="nav">
       <Link className="mark" to="/" aria-label={copy.navigation[0]}>{profile.initials}</Link>
@@ -112,16 +112,22 @@ function Nav() {
         <NavLink to="/profil">{copy.navigation[2]}</NavLink>
         <NavLink to="/parcours">{copy.navigation[3]}</NavLink>
       </nav>
-      <div className="language-picker" role="group" aria-label={copy.languageLabel}>
-        <button type="button" lang="en" aria-label="English" aria-pressed={language === 'en'} onClick={() => selectLanguage('en')}>
-          <span className="language-name">English</span><span className="language-code" aria-hidden="true">EN</span>
-        </button>
-        <button type="button" lang="fr" aria-label="Français" aria-pressed={language === 'fr'} onClick={() => selectLanguage('fr')}>
-          <span className="language-name">Français</span><span className="language-code" aria-hidden="true">FR</span>
-        </button>
-      </div>
       <Link className="contact-pill" to="/contact">{copy.contactLink} <span>↗</span></Link>
     </header>
+  )
+}
+
+function LanguagePicker() {
+  const { language, selectLanguage, copy } = usePortfolio()
+  return (
+    <div className="language-picker" role="group" aria-label={copy.languageLabel}>
+      <button type="button" lang="en" aria-label="English" aria-pressed={language === 'en'} onClick={() => selectLanguage('en')}>
+        <span className="language-name">English</span><span className="language-code" aria-hidden="true">EN</span>
+      </button>
+      <button type="button" lang="fr" aria-label="Français" aria-pressed={language === 'fr'} onClick={() => selectLanguage('fr')}>
+        <span className="language-name">Français</span><span className="language-code" aria-hidden="true">FR</span>
+      </button>
+    </div>
   )
 }
 
@@ -163,6 +169,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Nav />
+      <LanguagePicker />
       <main key={pathname} className="page">{children}</main>
       <footer>
         <span>© {new Date().getFullYear()} {profile.name}</span>
@@ -454,7 +461,8 @@ function App() {
       return
     }
 
-    const started = performance.now()
+    const started = performance.getEntriesByName('portfolio-intro-start', 'mark')[0]?.startTime ?? performance.now()
+    const timeLeft = (duration: number) => Math.max(0, duration - (performance.now() - started))
     const globe = document.querySelector<HTMLImageElement>('.hero-globe-image')
     let reveal: number | undefined
     let remove: number | undefined
@@ -464,12 +472,12 @@ function App() {
       if (stopped || reveal !== undefined) return
       reveal = window.setTimeout(() => {
         loader.classList.add('is-ready')
-        remove = window.setTimeout(() => loader.remove(), 370)
-      }, Math.max(0, 1120 - (performance.now() - started)))
+        remove = window.setTimeout(() => loader.remove(), 550)
+      }, timeLeft(2700))
     }
 
     // The application mounts immediately underneath the intro.
-    const deadline = window.setTimeout(finish, 1600)
+    const deadline = window.setTimeout(finish, timeLeft(3100))
     if (globe) void globe.decode().then(finish, finish)
     else finish()
 

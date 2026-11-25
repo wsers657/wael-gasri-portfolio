@@ -6,44 +6,51 @@
     <meta name="theme-color" content="#0a0a0a" />
     <script>
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+      try {
+        if (localStorage.getItem('portfolio-language') === 'fr') document.documentElement.lang = 'fr'
+      } catch {}
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" />
     <style>
-      @property --startup-progress {
-        syntax: "<integer>";
-        inherits: false;
-        initial-value: 0;
-      }
-      @counter-style startup-digits {
-        system: extends decimal;
-        pad: 3 "0";
-      }
       .portfolio-loader {
         position: fixed;
         inset: 0;
         z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
+        display: grid;
+        place-items: center;
         pointer-events: none;
         background: #04050e;
         color: #eaf0ff;
-        font: 12px system-ui, sans-serif;
-        letter-spacing: .23em;
-        animation: startup-exit 320ms ease-out 2.5s forwards;
+        animation: startup-exit 550ms ease-out 4.5s forwards;
       }
-      .portfolio-loader strong {
-        min-width: 3ch;
-        font-size: 1rem;
-        font-weight: 600;
-        font-variant-numeric: tabular-nums;
-        counter-reset: startup var(--startup-progress);
-        animation: startup-count 1s steps(25, end) forwards;
+      .startup-label {
+        position: absolute;
+        inset: 28px auto auto 28px;
+        color: #a5abc2;
+        font: 11px system-ui, sans-serif;
+        letter-spacing: .3em;
+        text-transform: uppercase;
       }
-      .portfolio-loader strong::after { content: counter(startup, startup-digits); }
+      .startup-words {
+        display: grid;
+        place-items: center;
+        font: italic clamp(3.5rem, 12vw, 7rem)/1 'Instrument Serif', Georgia, serif;
+      }
+      html:not([lang="fr"]) .startup-words[lang="fr"],
+      html[lang="fr"] .startup-words[lang="en"] { display: none; }
+      .startup-words span {
+        grid-area: 1 / 1;
+        --word-delay: 0ms;
+        animation: startup-word-in 320ms ease-out var(--word-delay) both,
+          startup-word-out 220ms ease-in calc(var(--word-delay) + 680ms) forwards;
+      }
+      .startup-words span:nth-child(2) { --word-delay: 900ms; }
+      .startup-words span:last-child {
+        --word-delay: 1800ms;
+        animation: startup-word-in 320ms ease-out var(--word-delay) both;
+      }
       .portfolio-loader i {
         position: absolute;
         bottom: 0;
@@ -52,12 +59,11 @@
         height: 2px;
         background: linear-gradient(90deg, #bdefff, #b6a1ff);
         transform-origin: left center;
-        animation: startup-bar 1s steps(25, end) forwards;
+        animation: startup-bar 2.7s linear forwards;
       }
-      .portfolio-loader.is-ready { animation: startup-exit 320ms ease-out forwards; }
-      .portfolio-loader.is-ready strong { --startup-progress: 100; animation: none; }
-      .portfolio-loader.is-ready i { animation: none; }
-      @keyframes startup-count { to { --startup-progress: 100; } }
+      .portfolio-loader.is-ready { animation: startup-exit 550ms ease-out forwards; }
+      @keyframes startup-word-in { from { opacity: 0; transform: translateY(20px); } }
+      @keyframes startup-word-out { to { opacity: 0; transform: translateY(-20px); } }
       @keyframes startup-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
       @keyframes startup-exit { to { opacity: 0; visibility: hidden; } }
       @media (prefers-reduced-motion: reduce) { .portfolio-loader { display: none; } }
@@ -66,10 +72,12 @@
   </head>
   <body>
     <div id="startup-loader" class="portfolio-loader" aria-hidden="true">
-      <span>PORTFOLIO / 2026</span>
-      <strong></strong>
+      <span class="startup-label">Portfolio</span>
+      <div class="startup-words" lang="en"><span>Design</span><span>Create</span><span>Inspire</span></div>
+      <div class="startup-words" lang="fr"><span>Concevoir</span><span>Créer</span><span>Inspirer</span></div>
       <i></i>
     </div>
+    <script>performance.mark('portfolio-intro-start')</script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
