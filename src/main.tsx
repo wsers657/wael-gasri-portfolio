@@ -141,7 +141,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Nav />
-      <span key={`stars-${pathname}`} className="route-stars" aria-hidden="true" />
       <main key={pathname} className="page">{children}</main>
       <footer>
         <span>© {new Date().getFullYear()} {profile.name}</span>
