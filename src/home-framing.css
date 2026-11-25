@@ -122,3 +122,9 @@
     min-height: 3.4rem;
   }
 }
+
+@media (max-width: 360px) {
+  .nav nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.25fr);
+  }
+}
