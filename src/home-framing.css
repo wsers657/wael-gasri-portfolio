@@ -1,0 +1,124 @@
+.nav {
+  width: min(660px, calc(100vw - 24px)) !important;
+}
+
+.nav nav {
+  flex: 1;
+  width: auto !important;
+  min-width: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.language-picker {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+  padding: 2px 3px;
+  border-left: 1px solid #dae8ff30;
+}
+
+.language-picker button {
+  min-height: 32px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: #cbd6f2;
+  font: 600 11px Inter, system-ui, sans-serif;
+}
+
+.language-picker button:hover {
+  color: #fff;
+}
+
+.language-picker button[aria-pressed="true"] {
+  border-color: #cad8ff48;
+  background: #9aafff24;
+  color: #f2f6ff;
+}
+
+.language-picker button:focus-visible {
+  outline: 2px solid #ccefff;
+  outline-offset: 1px;
+}
+
+.language-code {
+  display: none;
+}
+
+.profile-detail-lines {
+  white-space: pre-line;
+}
+
+/* Reserve space for the fixed menu, and let long copy extend the hero naturally. */
+.hero-new {
+  height: auto !important;
+  min-height: 100svh !important;
+  padding-block: clamp(88px, 12svh, 110px) clamp(54px, 8svh, 84px);
+}
+
+.hero-new .hero-content {
+  padding-block: 0 !important;
+  transform: none !important;
+}
+
+.hero-new .hero-content h1 {
+  font-size: clamp(4.5rem, min(10vw, 17svh), 8.8rem) !important;
+}
+
+.hero-new .orb {
+  width: min(44vw, 84svh, 640px) !important;
+}
+
+.hero-new .role-line {
+  height: auto !important;
+  min-height: 2.25em;
+}
+
+.hero-new .actions {
+  margin-top: clamp(22px, 5svh, 54px) !important;
+}
+
+@media (max-width: 760px) {
+  .nav {
+    width: calc(100vw - 16px) !important;
+  }
+
+  .language-name {
+    display: none;
+  }
+
+  .language-code {
+    display: inline;
+  }
+
+  .language-picker {
+    padding-inline: 2px;
+    gap: 0;
+  }
+
+  .language-picker button {
+    min-width: 28px;
+    padding-inline: 3px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-new {
+    padding-block: 82px 56px;
+  }
+
+  .hero-new .hero-content h1 {
+    font-size: clamp(3.9rem, min(22vw, 16svh), 6rem) !important;
+  }
+
+  .hero-new .orb {
+    width: min(92vw, 540px) !important;
+  }
+
+  .hero-new .role-line {
+    min-height: 3.4rem;
+  }
+}

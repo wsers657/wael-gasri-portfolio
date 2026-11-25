@@ -41,10 +41,10 @@ function Explore(){const ref=useRef<HTMLElement>(null);useEffect(()=>{const ctx=
 function Footer(){return <><section className="stats wrap"><div><b>20<span>+</span></b><p>Years Experience</p></div><div><b>95<span>+</span></b><p>Projects Done</p></div><div><b>200<span>%</span></b><p>Satisfied Clients</p></div></section><footer id="contact"><Video className="footer-video"/><div className="footer-shade"/><div className="marquee">{'BUILDING THE FUTURE • '.repeat(7)}</div><div className="footer-cta"><p>Have an idea in mind?</p><a href="mailto:hello@michaelsmith.com">Let’s make it real ↗</a></div><div className="footer-bottom"><span>© 2026 Michael Smith</span><div><a>Twitter</a><a>LinkedIn</a><a>Dribbble</a><a>GitHub</a></div><span className="available"><i/> Available for projects</span></div></footer></>}
 function App(){const [loading,setLoading]=useState(true);return <><AnimatePresence>{loading&&<Loading done={()=>setLoading(false)}/>}</AnimatePresence><main className={loading?'hidden-main':''}><Hero/><Work/><Journal/><Explore/><Footer/></main></>};createRoot(document.getElementById('root')!).render(<App/>)
 */
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HashRouter, Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
-import { profile, projects, skills, journey, ambitions } from './content/portfolio'
+import { content, ui, type Language } from './content/ui'
 import './styles.css'
 import './enhanced.css'
 import './nav.css'
@@ -88,18 +88,39 @@ import './home-globe-restore.css'
 import './profile-details.css'
 import './responsive-final.css'
 import './performance.css'
+import './home-framing.css'
+
+const languageKey = 'portfolio-language'
+const LanguageContext = createContext<{ language: Language; selectLanguage: (language: Language) => void }>({
+  language: 'en',
+  selectLanguage: () => {},
+})
+
+function usePortfolio() {
+  const { language, selectLanguage } = useContext(LanguageContext)
+  return { language, selectLanguage, copy: ui[language], ...content[language] }
+}
 
 function Nav() {
+  const { language, selectLanguage, copy, profile } = usePortfolio()
   return (
     <header className="nav">
-      <Link className="mark" to="/" aria-label="Home">{profile.initials}</Link>
-      <nav aria-label="Main navigation">
-        <NavLink to="/" end>Home</NavLink>
-        <NavLink to="/projets">Projects</NavLink>
-        <NavLink to="/profil">Profile</NavLink>
-        <NavLink to="/parcours">Experience</NavLink>
+      <Link className="mark" to="/" aria-label={copy.navigation[0]}>{profile.initials}</Link>
+      <nav aria-label={copy.navigationLabel}>
+        <NavLink to="/" end>{copy.navigation[0]}</NavLink>
+        <NavLink to="/projets">{copy.navigation[1]}</NavLink>
+        <NavLink to="/profil">{copy.navigation[2]}</NavLink>
+        <NavLink to="/parcours">{copy.navigation[3]}</NavLink>
       </nav>
-      <Link className="contact-pill" to="/contact">Contact me <span>↗</span></Link>
+      <div className="language-picker" role="group" aria-label={copy.languageLabel}>
+        <button type="button" lang="en" aria-label="English" aria-pressed={language === 'en'} onClick={() => selectLanguage('en')}>
+          <span className="language-name">English</span><span className="language-code" aria-hidden="true">EN</span>
+        </button>
+        <button type="button" lang="fr" aria-label="Français" aria-pressed={language === 'fr'} onClick={() => selectLanguage('fr')}>
+          <span className="language-name">Français</span><span className="language-code" aria-hidden="true">FR</span>
+        </button>
+      </div>
+      <Link className="contact-pill" to="/contact">{copy.contactLink} <span>↗</span></Link>
     </header>
   )
 }
@@ -117,7 +138,7 @@ function Orb({ home = false }: { home?: boolean }) {
           className="hero-globe-image"
           src="/media/digital-earth-network.webp"
           srcSet="/media/digital-earth-network-small.webp 640w, /media/digital-earth-network.webp 1263w"
-          sizes="(max-width: 720px) 92vw, (max-width: 1454px) 44vw, 640px"
+          sizes="(max-width: 720px) min(92vw, 540px), min(44vw, 84svh, 640px)"
           fetchPriority="high"
           decoding="async"
           alt=""
@@ -133,6 +154,7 @@ function Button({ to, children, dark = false }: { to: string; children: React.Re
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
+  const { copy, profile } = usePortfolio()
   const { pathname } = useLocation()
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
@@ -144,7 +166,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <main key={pathname} className="page">{children}</main>
       <footer>
         <span>© {new Date().getFullYear()} {profile.name}</span>
-        <span>Building interfaces that leave a lasting impression.</span>
+        <span>{copy.footer}</span>
         <a href={`mailto:${profile.email}`}>{profile.email}</a>
       </footer>
     </>
@@ -152,14 +174,16 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function Home() {
+  const { copy, profile } = usePortfolio()
   const [role, setRole] = useState(0)
+  const roleCount = profile.roles.length
   useEffect(() => {
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)')
     let timer: number | undefined
     const updateTimer = () => {
       window.clearInterval(timer)
       if (!motionPreference.matches && !document.hidden) {
-        timer = window.setInterval(() => setRole(index => (index + 1) % profile.roles.length), 2200)
+        timer = window.setInterval(() => setRole(index => (index + 1) % roleCount), 2200)
       }
     }
     updateTimer()
@@ -170,7 +194,7 @@ function Home() {
       motionPreference.removeEventListener('change', updateTimer)
       document.removeEventListener('visibilitychange', updateTimer)
     }
-  }, [])
+  }, [roleCount])
 
   return (
     <section className="hero-new">
@@ -179,21 +203,21 @@ function Home() {
       <div className="hero-content">
         <p className="kicker">PORTFOLIO — {profile.location}</p>
         <h1>{profile.firstName}<br /><em>{profile.lastName}</em></h1>
-        <p className="role-line">{profile.introPrefix} <strong key={role}>{profile.roles[role]}</strong></p>
+        <p className="role-line">{profile.introPrefix} <strong key={role}>{profile.roles[role % roleCount]}</strong></p>
         <p className="hero-text">{profile.shortBio}</p>
         <div className="actions">
-          <Button to="/projets">Explore my projects</Button>
-          <Button to="/profil" dark>View my profile</Button>
+          <Button to="/projets">{copy.home.projects}</Button>
+          <Button to="/profil" dark>{copy.home.profile}</Button>
         </div>
       </div>
-      <div className="hero-status"><i /> Open to new collaborations</div>
-      <p className="scroll-note">SCROLL TO EXPLORE <span>↓</span></p>
+      <div className="hero-status"><i /> {copy.home.availability}</div>
+      <p className="scroll-note">{copy.home.scroll} <span>↓</span></p>
     </section>
   )
 }
 
 function Title({ eyebrow, title, copy, signals = [] }: {
-  eyebrow: string; title: React.ReactNode; copy?: React.ReactNode; signals?: string[]
+  eyebrow: string; title: React.ReactNode; copy?: React.ReactNode; signals?: readonly string[]
 }) {
   return (
     <section className="page-title">
@@ -210,19 +234,21 @@ function Title({ eyebrow, title, copy, signals = [] }: {
 }
 
 function Projects() {
+  const { copy, projects } = usePortfolio()
+  const labels = copy.projects
   return (
     <>
       <Title
-        eyebrow="SELECTION / 01"
-        title={<>Selected <em>projects.</em></>}
-        signals={['4 projects', 'AI agents · Data · Automation', 'Personal & academic work']}
+        eyebrow={labels.eyebrow}
+        title={<>{labels.title[0]} <em>{labels.title[1]}</em></>}
+        signals={labels.signals}
         copy={<>
-          <span className="title-copy-lead">A selection of projects that turn ideas, videos and data into practical tools.</span>
-          <span>Each project starts with a concrete need: <strong>organising information</strong>, automating a repetitive task, making content easier to access or supporting a decision.</span>
-          <span>I combine design, development, AI and data analysis to build and refine each tool. These projects are also a way to learn. I test what I build and use feedback to improve it.</span>
+          <span className="title-copy-lead">{labels.lead}</span>
+          <span>{labels.need} <strong>{labels.emphasis}</strong>{labels.examples}</span>
+          <span>{labels.method}</span>
         </>}
       />
-      <section className="project-grid" aria-label="Projects">
+      <section className="project-grid" aria-label={copy.navigation[1]}>
         {projects.map((project, index) => (
           <article className={`project-card p${index}`} key={project.title}>
             <img src={project.image} loading="lazy" decoding="async" alt="" />
@@ -231,7 +257,7 @@ function Projects() {
               <p>{project.year} — {project.category}</p>
               <h2>{project.title}</h2>
               <span>{project.description}</span>
-              {project.url && <a href={project.url}>View case study <b>↗</b></a>}
+              {project.url && <a href={project.url}>{labels.caseStudy} <b>↗</b></a>}
             </div>
           </article>
         ))}
@@ -241,26 +267,31 @@ function Projects() {
 }
 
 function Profile() {
+  const { copy, profile, skills, ambitions } = usePortfolio()
+  const labels = copy.profile
   return (
     <>
       <Title
-        eyebrow="PROFILE / 02"
-        title={<>Build, learn,<br /><em>deliver.</em></>}
-        signals={['Business, Data & AI', 'Paris · Albert School × Mines Paris – PSL', 'Internship from June 2027']}
+        eyebrow={labels.eyebrow}
+        title={<>{labels.title[0]}<br /><em>{labels.title[1]}</em></>}
+        signals={labels.signals}
         copy={profile.longBio}
       />
-      <section className="profile-overview" aria-label="Profile at a glance">
-        <p className="kicker">AT A GLANCE</p>
+      <section className="profile-overview" aria-label={labels.overviewLabel}>
+        <p className="kicker">{labels.overview}</p>
         <div>
-          <article><span>EDUCATION</span><strong>Bachelor’s in Business, Data & AI</strong><p>Albert School × Mines Paris – PSL · Paris<br />2026–2029</p></article>
-          <article><span>INTERNSHIP</span><strong>At least six weeks</strong><p>Available from early June 2027, with interests in consulting, AI, finance and startups.</p></article>
-          <article><span>STUDENT INVOLVEMENT</span><strong>Sports Association Treasurer</strong><p>Albert School × Mines Paris – PSL · Member of Albert Junior Consulting.</p></article>
+          {labels.details.map(detail => (
+            <article key={detail.label}>
+              <span>{detail.label}</span><strong>{detail.title}</strong>
+              <p className="profile-detail-lines">{detail.lines.join('\n')}</p>
+            </article>
+          ))}
         </div>
       </section>
       <section className="profile-layout">
         <div className="portrait"><div /><span>{profile.initials}</span></div>
         <div className="profile-copy">
-          <p className="kicker">MY APPROACH</p>
+          <p className="kicker">{labels.approach}</p>
           <div className="profile-highlights">
             {profile.highlights.map((item, index) => <span key={item}><b>{String(index + 1).padStart(2, '0')}</b>{item}</span>)}
           </div>
@@ -273,7 +304,7 @@ function Profile() {
         </div>
       </section>
       <section className="ambition">
-        <p className="kicker">WHAT’S NEXT</p>
+        <p className="kicker">{labels.next}</p>
         <h2>{ambitions.heading}</h2>
         <p>{ambitions.description}</p>
         <div>{ambitions.items.map(item => <span key={item}>{item}</span>)}</div>
@@ -283,15 +314,17 @@ function Profile() {
 }
 
 function Journey() {
+  const { copy, journey } = usePortfolio()
+  const labels = copy.experience
   return (
     <>
       <Title
-        eyebrow="EXPERIENCE / 03"
-        title={<>Create, learn,<br /><em>grow.</em></>}
-        signals={['Bachelor’s · 2026–2029', 'Technical & student projects', 'Paris · Alpes-Maritimes']}
-        copy="The projects, coursework and student activities that shape how I work and collaborate."
+        eyebrow={labels.eyebrow}
+        title={<>{labels.title[0]}<br /><em>{labels.title[1]}</em></>}
+        signals={labels.signals}
+        copy={labels.copy}
       />
-      <section className="timeline" aria-label="Experience timeline">
+      <section className="timeline" aria-label={labels.timeline}>
         {journey.map((item, index) => (
           <article key={item.title}>
             <span>{item.period}</span><i>{String(index + 1).padStart(2, '0')}</i>
@@ -310,12 +343,14 @@ function Journey() {
 }
 
 function Contact() {
+  const { copy, profile } = usePortfolio()
+  const labels = copy.contact
   return (
     <section className="contact-page">
       <Orb />
-      <p className="kicker">HAVE AN IDEA OR A CHALLENGE?</p>
-      <h1>Let’s build something<br /><em>memorable.</em></h1>
-      <p>I’m always happy to talk about an idea, a product or a potential collaboration.</p>
+      <p className="kicker">{labels.eyebrow}</p>
+      <h1>{labels.title[0]}<br /><em>{labels.title[1]}</em></h1>
+      <p>{labels.copy}</p>
       <a className="email-link" href={`mailto:${profile.email}`}>{profile.email} <span>↗</span></a>
       <div className="socials">
         {Object.entries(profile.socials).map(([name, url]) => <a key={name} href={url} target="_blank" rel="noreferrer">{name} ↗</a>)}
@@ -394,6 +429,23 @@ function Cursor() {
 }
 
 function App() {
+  const [language, selectLanguage] = useState<Language>(() => {
+    try {
+      return localStorage.getItem(languageKey) === 'fr' ? 'fr' : 'en'
+    } catch {
+      return 'en'
+    }
+  })
+
+  useLayoutEffect(() => {
+    document.documentElement.lang = language
+    try {
+      localStorage.setItem(languageKey, language)
+    } catch {
+      // Switching languages still works if persistent storage is unavailable.
+    }
+  }, [language])
+
   useEffect(() => {
     const loader = document.getElementById('startup-loader')
     if (!loader) return
@@ -412,12 +464,12 @@ function App() {
       if (stopped || reveal !== undefined) return
       reveal = window.setTimeout(() => {
         loader.classList.add('is-ready')
-        remove = window.setTimeout(() => loader.remove(), 210)
-      }, Math.max(0, 340 - (performance.now() - started)))
+        remove = window.setTimeout(() => loader.remove(), 370)
+      }, Math.max(0, 1120 - (performance.now() - started)))
     }
 
     // The application mounts immediately underneath the intro.
-    const deadline = window.setTimeout(finish, 720)
+    const deadline = window.setTimeout(finish, 1600)
     if (globe) void globe.decode().then(finish, finish)
     else finish()
 
@@ -430,7 +482,7 @@ function App() {
   }, [])
 
   return (
-    <>
+    <LanguageContext.Provider value={{ language, selectLanguage }}>
       <Cursor />
       <HashRouter>
         <Layout>
@@ -443,7 +495,7 @@ function App() {
           </Routes>
         </Layout>
       </HashRouter>
-    </>
+    </LanguageContext.Provider>
   )
 }
 
